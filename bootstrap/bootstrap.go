@@ -6,7 +6,6 @@ import (
 	"log"
 )
 
-
 func Run() {
 	//bot := openwechat.DefaultBot()
 	bot := openwechat.DefaultBot(openwechat.Desktop) // 桌面模式，上面登录不上的可以尝试切换这种模式
@@ -21,7 +20,8 @@ func Run() {
 	reloadStorage := openwechat.NewJsonFileHotReloadStorage("storage.json")
 
 	// 执行热登录
-	err := bot.HotLogin(reloadStorage)
+	//err := bot.HotLogin(reloadStorage)
+	err := bot.PushLogin(reloadStorage, openwechat.PushLoginWithRetry(true))
 	if err != nil {
 		if err = bot.Login(); err != nil {
 			log.Printf("login error: %v \n", err)

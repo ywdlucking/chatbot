@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"github.com/869413421/wechatbot/gtp"
 	"github.com/eatmoreapple/openwechat"
 	"log"
 	"strings"
@@ -28,6 +27,7 @@ func NewUserMessageHandler() MessageHandlerInterface {
 
 // ReplyText 发送文本消息到群
 func (g *UserMessageHandler) ReplyText(msg *openwechat.Message) error {
+
 	// 接收私聊消息
 	sender, err := msg.Sender()
 	log.Printf("Received User %v Text Msg : %v", sender.NickName, msg.Content)
@@ -44,12 +44,16 @@ func (g *UserMessageHandler) ReplyText(msg *openwechat.Message) error {
 	requestText = strings.Trim(msg.Content, "\n")
 
 	requestText = UserService.GetUserSessionContext(sender.ID()) + requestText
-	reply, err := gtp.Completions(requestText)
-	if err != nil {
-		log.Printf("gtp request error: %v \n", err)
-		msg.ReplyText("机器人神了，我一会发现了就去修。")
-		return err
-	}
+	//reply, err := gtp.Completions(requestText)
+	//if err != nil {
+	//	reply = util.GetResponse(requestText)
+	//	log.Printf("bot reply %v", reply)
+	//	//log.Printf("gtp request error: %v \n", err)
+	//	//msg.ReplyText("机器人神了，我一会发现了就去修。")
+	//	//return err
+	//}
+	//reply := util.GetGroupOwner(msg.Content)
+	reply := "我还在学习"
 	if reply == "" {
 		return nil
 	}
@@ -58,10 +62,12 @@ func (g *UserMessageHandler) ReplyText(msg *openwechat.Message) error {
 	reply = strings.TrimSpace(reply)
 	reply = strings.Trim(reply, "\n")
 	UserService.SetUserSessionContext(sender.ID(), requestText, reply)
-	reply = "本消息由 chatGPT Bot回复：\n" + reply
+	reply = "本消息由 robot 回复：\n" + reply
 	_, err = msg.ReplyText(reply)
 	if err != nil {
 		log.Printf("response user error: %v \n", err)
 	}
+	//设置已读
+	msg.AsRead()
 	return err
 }

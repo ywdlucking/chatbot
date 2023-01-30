@@ -49,6 +49,12 @@ func init() {
 // Handler 全局处理入口
 func Handler(msg *openwechat.Message) {
 	log.Printf("hadler Received msg : %v", msg.Content)
+	if !msg.IsText() {
+		_, err := msg.ReplyText("抱歉现在还不能处理非文字消息，我正在抓紧学习。")
+		if err != nil {
+			log.Printf("response user error: %v \n", err)
+		}
+	}
 	// 处理群消息
 	if msg.IsSendByGroup() {
 		handlers[GroupHandler].handle(msg)

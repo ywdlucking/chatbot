@@ -29,6 +29,7 @@ func (s *UserService) ClearUserSessionContext(userId string, msg string) bool {
 		s.cache.Delete(userId)
 		return true
 	}
+	s.cache.Delete(userId)
 	return false
 }
 
